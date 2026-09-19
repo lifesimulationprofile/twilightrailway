@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>saihatedlc</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #0c0a14;
+      --text-main: #f5edf7;
+      --text-dim: rgba(230, 215, 235, 0.65);
+      --dawn-peach: #f3a675;
+      --dawn-peach-hover: #f8b88d;
+      --dawn-glow: rgba(243, 166, 117, 0.28);
+      --card-bg: rgba(24, 18, 33, 0.72);
+      --card-border: rgba(243, 166, 117, 0.18);
+      --card-border-hover: rgba(243, 166, 117, 0.35);
+      --accent-purple: #9d65c9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+      background-image:
+        radial-gradient(ellipse 70% 50% at 50% 35%, rgba(247, 182, 137, 0.14) 0%, rgba(139, 78, 158, 0.12) 45%, transparent 75%),
+        radial-gradient(circle at 50% 10%, rgba(68, 36, 107, 0.4) 0%, transparent 60%),
+        linear-gradient(180deg, #090710 0%, #110c1c 50%, #161022 100%);
+      background-attachment: fixed;
+    }
+
+    #ambient-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.85;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 860px;
+      padding: 4.5rem 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(2.1rem, 5.5vw, 3.6rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      line-height: 1.25;
+      color: #fff9f5;
+      text-shadow: 0 4px 30px rgba(243, 166, 117, 0.2), 0 0 60px rgba(157, 101, 201, 0.2);
+      text-transform: uppercase;
+      max-width: 800px;
+    }
+
+    .button-container {
+      margin-top: 3.5rem;
+    }
+
+    .main-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1.15rem 3.2rem;
+      background-color: var(--dawn-peach);
+      color: #170d18;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 25px var(--dawn-glow);
+    }
+
+    .main-button:hover {
+      background-color: var(--dawn-peach-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(243, 166, 117, 0.45);
+    }
+
+    .main-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 12px rgba(243, 166, 117, 0.25);
+    }
+
+    /* Секция инструкции */
+    .guide-section {
+      width: 100%;
+      max-width: 660px;
+      margin-top: 4.5rem;
+      padding: 2.4rem;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      backdrop-filter: blur(14px);
+      text-align: left;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.3s ease;
+    }
+
+    .guide-section:hover {
+      border-color: var(--card-border-hover);
+    }
+
+    .guide-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin-bottom: 2rem;
+      color: #fffaf5;
+      text-align: center;
+      position: relative;
+      padding-bottom: 0.8rem;
+    }
+
+    .guide-title::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--dawn-peach), transparent);
+    }
+
+    .guide-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .guide-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .guide-step:hover {
+      background: rgba(243, 166, 117, 0.04);
+    }
+
+    .step-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--dawn-peach);
+      opacity: 0.95;
+      line-height: 1.3;
+      min-width: 1.5rem;
+    }
+
+    .step-content strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--text-main);
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.01em;
+    }
+
+    .step-content p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .wrapper {
+        padding: 3rem 1.2rem;
+      }
+      .guide-section {
+        padding: 1.6rem 1.2rem;
+      }
+      .main-button {
+        width: 100%;
+        padding: 1.1rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="ambient-canvas"></canvas>
+
+  <div class="wrapper">
+    <div class="content">
+      <h1 class="title">Станция Сайхате: Сумеречная Железная Дорога</h1>
+
+      <div class="button-container">
+        <a href="яблоко.ru" class="main-button" target="_blank" rel="noopener noreferrer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Скачать
+        </a>
+      </div>
+
+      <section class="guide-section" aria-label="Инструкция">
+        <h2 class="guide-title">Инструкция</h2>
+
+        <ol class="guide-steps">
+          <li class="guide-step">
+            <span class="step-num">1.</span>
+            <div class="step-content">
+              <strong>Скачать архив по кнопке</strong>
+              <p>Нажав кнопку выше, скачайте архив <code>DLCtasogare-win.zip</code>. При отсутствии архиваторов (WinRAR, 7-Zip и т.п.) загрузить.</p>
+            </div>
+          </li>
+
+          <li class="guide-step">
+            <span class="step-num">2.</span>
+            <div class="step-content">
+              <strong>Распаковка и запуск</strong>
+              <p>Нажав правой кнопкой по скачанному архиву, выбери пункт <code>Распаковать в...</code> и распакуйте содержимое архива в папку. Далее, запустите файл <code>Game.exe</code></p>
+            </div>
+          </li>
+        </ol>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Анимация фоновых частиц
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2.2 + 0.6;
+        this.speedX = (Math.random() - 0.5) * 0.35;
+        this.speedY = -Math.random() * 0.45 - 0.15;
+        this.alpha = Math.random() * 0.7 + 0.2;
+        this.alphaDirection = Math.random() > 0.5 ? 0.006 : -0.006;
+        this.color = Math.random() > 0.4 ? '243, 166, 117' : '175, 126, 219';
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.alpha += this.alphaDirection;
+
+        if (this.alpha <= 0.1 || this.alpha >= 0.85) {
+          this.alphaDirection = -this.alphaDirection;
+        }
+
+        if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+          this.reset();
+          this.y = height + 5;
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `rgba(${this.color}, 0.5)`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    const particleCount = Math.min(Math.floor((width * height) / 14000), 75);
+    const particles = Array.from({ length: particleCount }, () => new Particle());
+
+    function animateAmbient() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
+      requestAnimationFrame(animateAmbient);
+    }
+
+    window.onload = function() {
+      animateAmbient();
+    };
+  </script>
+</body>
+</html>
